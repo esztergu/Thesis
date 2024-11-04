@@ -116,10 +116,10 @@ df_rodent_targets.to_csv("rodent_targets.csv",index=False)
 # git-be feltenni
 
 conn = sqlite3.connect("/home/esztergu/git/chembl-pipeline/input/chembl_29_sqlite/chembl_29.db")
-df_prefname=pd.read_sql_query("SELECT PREF_NAME,ORGANISM FROM TARGET_DICTIONARY WHERE CHEMBL_ID = %s", conn, params=("CHEMBL1615381",)) # hibas
-conn.close()
+df_prefname=pd.read_sql_query("SELECT PREF_NAME,ORGANISM FROM TARGET_DICTIONARY WHERE CHEMBL_ID = ?", conn, params=("CHEMBL1615381",))
 # df=pd.read_sql("SELECT column_name FROM table_name WHERE column_name2 = %s", con=engine, params=(variable_name,))
-
-just_rodent=target_dictionary.join(df_rodent_targets, on="chembl_id", how="inner")
+target_dictionary=pd.read_sql_query("select * from target_dictionary", conn)
+conn.close()
+just_rodent=target_dictionary.join(df_rodent_targets.set_index(0), on="chembl_id", how="inner")
 
 
