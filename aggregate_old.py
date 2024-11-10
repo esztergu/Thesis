@@ -1,7 +1,7 @@
 import sparsechem as sc
 import os
 
-my_files = os.listdir("/home/esztergu/git/SparseChem/examples/chembl/models/")
+my_files = os.listdir("/home/esztergu/git/SparseChem/examples/chembl/rodent/")
 max_auc = 0
 best_dropout = 0
 best_hidden_size = 0
@@ -9,7 +9,7 @@ best_weight_decay = 0
 print ("id, hidden, dropout, weight_decay, auc")
 for i in my_files:
     if os.path.splitext(i)[1] == ".json":
-        res = sc.load_results("models/" + i)
+        res = sc.load_results("/home/esztergu/git/SparseChem/examples/chembl/rodent/" + i)
         my_hidden_size = res["conf"].hidden_sizes[0]
         my_dropout = res["conf"].dropouts_trunk[0]
         my_weight_decay = res["conf"].weight_decay
