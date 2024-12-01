@@ -30,9 +30,9 @@ print (f"rodent: {my_hidden_size}, {my_dropout}, {my_weight_decay}, {my_auc_scor
 auc_human=res_human["validation"]["classification"].roc_auc_score
 auc_rodent=res_rodent["validation"]["classification"].roc_auc_score
 
-df=pd.read_csv("~/git/chembl-pipeline/output/chembl_29/agg_weight.csv")
-df["rodent_auc"]=auc_rodent
-auc_rodent_filtered=df[df.aggregation_weight==1.0]["rodent_auc"]
+#df=pd.read_csv("~/git/chembl-pipeline/output/chembl_29/agg_weight.csv")
+#df["rodent_auc"]=auc_rodent
+#auc_rodent_filtered=df[df.aggregation_weight==1.0]["rodent_auc"]
 
 
 #javitani kell
@@ -59,7 +59,7 @@ target_homo=pd.read_csv("/home/esztergu/git/chembl-pipeline/output/chembl_29/che
 target_all_4=np.repeat(target_all.values,4,axis=0)
 target_homo_4=np.repeat(target_homo.values,4,axis=0)
 
-target_all_filtered=target_all_4[df.aggregation_weight==1.0]
+#target_all_filtered=target_all_4[df.aggregation_weight==1.0]
 target_homo_filtered=target_homo_4[aggregation_weight==1.0]
 
 # set(target_homo.values.flatten()).difference(target_all.values.flatten()) ez set() szóval jó
@@ -70,7 +70,7 @@ target_homo_4_thr=target_homo_4.flatten()+np.array(["_0","_1","_2","_3"]*target_
 
 selected_targets=set(target_homo_4_thr[aggregation_weight==1.0])
 
-all_mask=[t in selected_targets for t in list (target_all_4_thr)]
+all_mask=[(t in selected_targets) for t in list (target_all_4_thr)]
 auc_rodent_filtered=auc_rodent[all_mask].values #mean-je 0.8112741840355688
 
 all_names=target_all_4_thr[all_mask]
@@ -107,19 +107,19 @@ for target in top10_targets:
 # CHEMBL4338 Purine nucleoside phosphorylase
 # CHEMBL1615381 Menin
 
-rodent_targets=set(target_all.values.flatten()).difference(target_homo.values.flatten())
-df_rodent_targets=pd.DataFrame(rodent_targets)
-df_rodent_targets.to_csv("rodent_targets.csv",index=False)
+#rodent_targets=set(target_all.values.flatten()).difference(target_homo.values.flatten())
+#df_rodent_targets=pd.DataFrame(rodent_targets)
+#df_rodent_targets.to_csv("rodent_targets.csv",index=False)
 
 
 # egér humán páros
 # git-be feltenni
 
-conn = sqlite3.connect("/home/esztergu/git/chembl-pipeline/input/chembl_29_sqlite/chembl_29.db")
-df_prefname=pd.read_sql_query("SELECT PREF_NAME,ORGANISM FROM TARGET_DICTIONARY WHERE CHEMBL_ID = ?", conn, params=("CHEMBL1615381",))
+#conn = sqlite3.connect("/home/esztergu/git/chembl-pipeline/input/chembl_29_sqlite/chembl_29.db")
+#df_prefname=pd.read_sql_query("SELECT PREF_NAME,ORGANISM FROM TARGET_DICTIONARY WHERE CHEMBL_ID = ?", conn, params=("CHEMBL1615381",))
 # df=pd.read_sql("SELECT column_name FROM table_name WHERE column_name2 = %s", con=engine, params=(variable_name,))
-target_dictionary=pd.read_sql_query("select * from target_dictionary", conn)
-conn.close()
-just_rodent=target_dictionary.join(df_rodent_targets.set_index(0), on="chembl_id", how="inner")
+#target_dictionary=pd.read_sql_query("select * from target_dictionary", conn)
+#conn.close()
+#just_rodent=target_dictionary.join(df_rodent_targets.set_index(0), on="chembl_id", how="inner")
 
 
