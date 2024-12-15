@@ -85,6 +85,7 @@ dif=auc_rodent_filtered-auc_human_filtered
 # all_names[138]
 # 'CHEMBL1628481_1'
 top10=dif.argsort()[-10:]
+top30=dif.argsort()[-30:]
 
 plt.cla()
 plt.scatter(auc_human_filtered,auc_rodent_filtered,s=1)
@@ -92,9 +93,19 @@ plt.scatter(auc_human_filtered[top10],auc_rodent_filtered[top10],c="red",s=2)
 plt.plot([0,1],[0,1],c="red")
 plt.savefig("target_compare_top10.pdf")
 
+targets=[]
 top10_targets=all_names[top10]
 for target in top10_targets:
     print(target)
+    targets.append(target[:-2])
+similars=pd.read_csv("Similar_targets.csv")
+
+targets_30=[]
+top30_targets=all_names[top30]
+for target in top30_targets:
+    print(target)
+    targets.append(target[:-2])
+#30-ban sincsen
 
 # CHEMBL2123 Pyrimidinergic receptor P2Y4
 # CHEMBL3217390 Transcription initiation factor TFIID subunit 1
@@ -106,6 +117,18 @@ for target in top10_targets:
 # CHEMBL1615321 microRNA 30a
 # CHEMBL4338 Purine nucleoside phosphorylase
 # CHEMBL1615381 Menin
+
+# CHEMBL2123_0
+# CHEMBL3217390_0
+# CHEMBL3429_0
+# CHEMBL5542_1
+# CHEMBL4941_2
+# CHEMBL4071_1
+# CHEMBL612547_0
+# CHEMBL1615321_0
+# CHEMBL4338_0
+# CHEMBL1615381_2
+
 
 #rodent_targets=set(target_all.values.flatten()).difference(target_homo.values.flatten())
 #df_rodent_targets=pd.DataFrame(rodent_targets)

@@ -20,58 +20,63 @@ target_all_4_thr=target_all_4.flatten()+np.array(["_0","_1","_2","_3"]*target_al
 
 rodent_targets=set(target_all.values.flatten()).difference(target_homo.values.flatten())
 
-id_1=0 #first target to compare
-id_2=1
-
-def targets_sim(id_1, id_2, eps=1e-15):
+def targets_sim(id_h, thr_h, id_r, eps=1e-15):
     max_sim=0
-    best_i= None
-    best_j= None
+    best_r= None
+    i=id_h*4+thr_h
 
-    for i in range(id_1*4, (id_1+1)*4):
-        for j in range(id_2*4, (id_2+1)*4):
-            denom=np.linalg.norm(w[i])*np.linalg.norm(w[j])
-            if denom < eps:
-                continue
-            tmp=np.dot(w[i],w[j])/denom
-            #print (f"{i}, {j} -> {tmp}")
-            if tmp > max_sim:
-                max_sim = tmp
-                best_i = i
-                best_j = j
+    for j in range(id_r*4, (id_r+1)*4):
+        denom=np.linalg.norm(w[i])*np.linalg.norm(w[j])
+        if denom < eps:
+            continue
+        tmp=np.dot(w[i],w[j])/denom
+        #print (f"{j} -> {tmp}")
+        if tmp > max_sim:
+            max_sim = tmp
+            best_r = j
 
-    #print (f"{best_i}, {best_j} -> {max_sim}")
+    #print (f"{best_r} -> {max_sim}")
     return max_sim
 
 target_all_list=target_all[0].tolist()
 rodent_index=[i for i in range(len(target_all_list)) if target_all_list[i] in rodent_targets]
 
-target_homo_list=target_homo[0].tolist()
-homo_index=[i for i in range(len(target_all_list)) if target_all_list[i] in target_homo_list]
+top_10=["CHEMBL2123", "CHEMBL3217390", "CHEMBL3429", "CHEMBL5542", "CHEMBL4941", "CHEMBL4071", "CHEMBL612547", "CHEMBL1615321", "CHEMBL4338", "CHEMBL1615381"]
+
+# CHEMBL2123_0
+# CHEMBL3217390_0
+# CHEMBL3429_0
+# CHEMBL5542_1
+# CHEMBL4941_2
+# CHEMBL4071_1
+# CHEMBL612547_0
+# CHEMBL1615321_0
+# CHEMBL4338_0
+# CHEMBL1615381_2
+
+top_10_thr=[0, 0, 0, 1, 2, 1, 0, 0, 0, 2]
+homo_index=[i for i in range(len(target_all_list)) if target_all_list[i] in top_10]
 
 conn = sqlite3.connect("/home/esztergu/git/chembl-pipeline/input/chembl_29_sqlite/chembl_29.db")
 
-print("Murine id,Murine name,Human id,Human name,similarity")
-
-for id_1 in rodent_index:
-    
+for i in range(len(top_10)):
     max_sim=0
-    best_homo=None
-    for id_2 in homo_index:
-        sim=targets_sim(id_1, id_2)
+    best_rodent=None
+    for id_2 in rodent_index:
+        sim=targets_sim(homo_index[i],top_10_thr[i], id_2)
         if sim > max_sim:
             max_sim = sim
-            best_homo = id_2
+            best_rodent = id_2
 
-    df_prefname_1=pd.read_sql_query("SELECT PREF_NAME,ORGANISM FROM TARGET_DICTIONARY WHERE CHEMBL_ID = ?", conn, params=(target_all_list[id_1],))
+    df_prefname_1=pd.read_sql_query("SELECT PREF_NAME,ORGANISM FROM TARGET_DICTIONARY WHERE CHEMBL_ID = ?", conn, params=(target_all_list[homo_index[i]],))
 
-    if best_homo is None:
+    if best_rodent is None:
         #print(f"No pair for: {target_all_list[id_1]}({id_1})" )
         pass
     else:
-        df_prefname_2=pd.read_sql_query("SELECT PREF_NAME,ORGANISM FROM TARGET_DICTIONARY WHERE CHEMBL_ID = ?", conn, params=(target_all_list[best_homo],))
+        df_prefname_2=pd.read_sql_query("SELECT PREF_NAME,ORGANISM FROM TARGET_DICTIONARY WHERE CHEMBL_ID = ?", conn, params=(target_all_list[best_rodent],))
         #print(f"Best pair: {target_all_list[id_1]}({id_1})({df_prefname_1['pref_name'][0]}), {target_all_list[best_homo]}({best_homo})({df_prefname_2['pref_name'][0]}), {max_sim}" )
-        print(f"{target_all_list[id_1]},\"{df_prefname_1['pref_name'][0]}\", {target_all_list[best_homo]},\"{df_prefname_2['pref_name'][0]}\", {max_sim}" )
+        print(f"{target_all_list[homo_index[i]]}_{top_10_thr[i]},\"{df_prefname_1['pref_name'][0]}\", {target_all_list[best_rodent]},\"{df_prefname_2['pref_name'][0]}\", {max_sim}" )
 
 # csv, majd latex table
 
