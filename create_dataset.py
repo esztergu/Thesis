@@ -1,7 +1,7 @@
 # This file is an extended version of the data generating script published with the paper:
 # Simm, J., Arany, A., De Brouwer, E., & Moreau, Y. (2021, October). 
 # Expressive graph informer networks. In International Conference on Machine Learning, Optimization, and Data Science (pp. 198-212). 
-# Cham: Springer International Publishing.
+# Cham, Switzerland: Springer International Publishing.
 #
 # Dataset filters:
 # 1) Select all assays where the organism is "Homo sapiens" or "Mus musculus" and the targe_type is "SINGLE PROTEIN" proteins
@@ -16,7 +16,7 @@ import configargparse
 import sqlite3
 import pandas as pd
 import numpy as np
-import scipy.io
+#import scipy.io
 import os
 import logging
 
@@ -64,9 +64,9 @@ df = pd.read_sql_query("""SELECT molecule_dictionary.chembl_id as cmpd_id, targe
                                 ic50 < 10e9 AND ic50 >= 10e-5 """, conn)
 conn.close()
 logging.info("Filtering and thresholding activity data")
-# Pick the minimum
+# Picking the minimum
 df = df.groupby(["target_id","cmpd_id"]).min().reset_index()
-# at least N compounds per assay
+# At least N compounds per assay
 c  = df.groupby("target_id")["cmpd_id"].nunique()
 i  = c[c >= options.mincmpdcount].index
 df = df[df.target_id.isin(i)]
@@ -74,12 +74,12 @@ df = df[df.target_id.isin(i)]
 df["pic50"] = 9 - np.log10(df["ic50"])
 df.to_csv('temporary_continuous.csv')
 
-#Thresholding
+# Thresholding
 value_vars = []
 for thr in options.thresholds:
     value_vars.append("%1.1f" % thr)
     thr_str = "%1.1f" % thr
-    ## using +1 and -1 for actives and inactives
+    # Using +1 and -1 for actives and inactives
     df[thr_str] = (df["pic50"] >= thr) * 2.0 - 1.0
     df[thr_str] = np.where(np.logical_and((df["relation"] == '<'), (df['pic50'] < thr)), np.nan, df[thr_str]) 
     df[thr_str] = np.where(np.logical_and((df["relation"] == '>'), (df['pic50'] > thr)), np.nan, df[thr_str]) 
@@ -88,7 +88,7 @@ logging.info("Saving data into '%s'" % outdir)
 melted = pd.melt(df, id_vars=['target_id','cmpd_id','org'], value_vars=value_vars).dropna()
 melted.to_csv('%s/%s_thresh.csv' % (outdir, options.prefix), index = False)
 
-#Write unique compound IDs
+# Writing unique compound IDs
 np.savetxt("%s/%s_compounds.csv" % (outdir, options.prefix), melted["cmpd_id"].unique(), fmt="%s")
 np.savetxt("%s/%s_targets.csv" % (outdir, options.prefix), melted["target_id"].unique(), fmt="%s")
 homos=melted[melted.org=="Homo sapiens"]
