@@ -5,8 +5,11 @@ import numpy as np
 import sqlite3
 
 #export LD_LIBRARY_PATH=/home/esztergu/miniconda3/envs/new_SparseChem/lib/:$LD_LIBRARY_PATH
+sc_path="/home/esztergu/git/Thesis/"
 
-state_dict=torch.load("/home/esztergu/git/SparseChem/examples/chembl/rodent/sc_run_h6000_ldo_r_ldo_t0.8_wd1e-05_lr0.001_lrsteps10_ep20_fva3_fte4.pt")
+# Loading the SparseChem model
+state_dict=torch.load(sc_path + "multispecies/sc_run_h6000_ldo_r_ldo_t0.8_wd1e-05_lr0.001_lrsteps10_ep20_fva3_fte4.pt")
+# Copying the last layer weights
 w=state_dict['classLast.net.initial_layer.2.weight'].cpu()
 
 target_all=pd.read_csv("/home/esztergu/git/chembl-pipeline/output/chembl_29/chembl_29_targets.csv", header=None)
@@ -20,10 +23,11 @@ target_all_4_thr=target_all_4.flatten()+np.array(["_0","_1","_2","_3"]*target_al
 
 rodent_targets=set(target_all.values.flatten()).difference(target_homo.values.flatten())
 
-id_1=0 #first target to compare
-id_2=1
+#id_1=0 #first target to compare
+#id_2=1
 
 def targets_sim(id_1, id_2, eps=1e-15):
+    '''This function computes the similarity between two targets by taking the most similiar threshold pair'''
     max_sim=0
     best_i= None
     best_j= None
