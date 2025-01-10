@@ -23,9 +23,6 @@ target_all_4_thr=target_all_4.flatten()+np.array(["_0","_1","_2","_3"]*target_al
 
 rodent_targets=set(target_all.values.flatten()).difference(target_homo.values.flatten())
 
-#id_1=0 #first target to compare
-#id_2=1
-
 def targets_sim(id_1, id_2, eps=1e-15):
     '''This function computes the similarity between two targets by taking the most similiar threshold pair'''
     max_sim=0
@@ -47,18 +44,21 @@ def targets_sim(id_1, id_2, eps=1e-15):
     #print (f"{best_i}, {best_j} -> {max_sim}")
     return max_sim
 
+# Collecting into a list the indexes of the rodent targets
 target_all_list=target_all[0].tolist()
 rodent_index=[i for i in range(len(target_all_list)) if target_all_list[i] in rodent_targets]
 
+# Collecting into a list the indexes of the human targets
 target_homo_list=target_homo[0].tolist()
 homo_index=[i for i in range(len(target_all_list)) if target_all_list[i] in target_homo_list]
 
+# Opening the database to look up the human readable names of the targets
 conn = sqlite3.connect("/home/esztergu/git/chembl-pipeline/input/chembl_29_sqlite/chembl_29.db")
 
 print("Murine id,Murine name,Human id,Human name,similarity")
 
 for id_1 in rodent_index:
-    
+    # Searching for the most similar human targets for the rodent target ids
     max_sim=0
     best_homo=None
     for id_2 in homo_index:
@@ -66,7 +66,7 @@ for id_1 in rodent_index:
         if sim > max_sim:
             max_sim = sim
             best_homo = id_2
-
+    
     df_prefname_1=pd.read_sql_query("SELECT PREF_NAME,ORGANISM FROM TARGET_DICTIONARY WHERE CHEMBL_ID = ?", conn, params=(target_all_list[id_1],))
 
     if best_homo is None:
