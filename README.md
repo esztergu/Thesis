@@ -26,6 +26,10 @@ Execute run.sh
 
 # Running the hyperparameter search
 
+Go back to the route of the present git repository
+
+Execute the following command: python filter_compunds.py
+
 Before running the gridsearch.sh and the gridsearch_human.sh make sure to edit the path and the name of the conda environment to be used
 
 Execute the hyperparamter search on the multispecies dataset by running the gridsearch.sh
