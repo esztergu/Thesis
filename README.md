@@ -41,3 +41,19 @@ This implies training several neural networks on GPU and may take significant am
 You can examine the best models for those datasets using the list_params.py script
 
 Change the file names of the best models in the target_compare.py script then execute it
+
+
+# Selecting the best hyperparameters
+
+Execute the following commands:
+python list_params.py -m multispecies/
+python list_params.py -m human_only/
+
+# Analyzing results
+
+Edit target_compare.py in line 14 and 25 to the selected optimal models
+Edit similarity_check.py in line 12 to the selected optimal model
+
+Execute the following commands:
+python target_compare.py
+python similarity_check.py

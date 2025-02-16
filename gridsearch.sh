@@ -1,9 +1,9 @@
 #!/bin/bash
 # Edit the following 3 lines according to your setup:
-SPARSECHEM_PATH=/home/esztergu/git/SparseChem/examples/chembl/
-CHEMBL_PATH=~/git/chembl-pipeline/output/chembl_29/
-conda activate new_SparseChem
-export LD_LIBRARY_PATH=/home/esztergu/miniconda3/envs/new_SparseChem/lib/:$LD_LIBRARY_PATH
+SPARSECHEM_PATH=/home/esztergu/git/Thesis/dependencies/SparseChem/sparsechem/
+CHEMBL_PATH=/home/esztergu/git/Thesis/dependencies/EszterGulyasBSc/chembl-pipeline-main/output/chembl_29/
+conda activate Test
+#export LD_LIBRARY_PATH=/home/esztergu/miniconda3/envs/new_SparseChem/lib/:$LD_LIBRARY_PATH
 
 for do in 0.5 0.6 0.7 0.8 0.9
 do

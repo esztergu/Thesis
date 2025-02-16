@@ -1,7 +1,7 @@
 #!/bin/bash
 # Edit the following 3 lines according to your setup:
-SPARSECHEM_PATH=/home/esztergu/git/SparseChem/examples/chembl/
-CHEMBL_PATH=~/git/chembl-pipeline/output/chembl_29/
+SPARSECHEM_PATH=/home/esztergu/git/Thesis/dependencies/SparseChem/sparsechem/
+CHEMBL_PATH=/home/esztergu/git/Thesis/dependencies/EszterGulyasBSc/chembl-pipeline-main/output/chembl_29/
 conda activate new_SparseChem
 export LD_LIBRARY_PATH=/home/esztergu/miniconda3/envs/new_SparseChem/lib/:$LD_LIBRARY_PATH
 
