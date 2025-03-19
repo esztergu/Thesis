@@ -57,3 +57,16 @@ Edit similarity_check.py in line 12 to the selected optimal model
 Execute the following commands:
 python target_compare.py
 python similarity_check.py
+
+# Creating target orthology mapping
+
+Download the following files from OrthoDB (orthodb.org) to the orthoDB folder:
+(The Thesis results were created using version 12.)
+
+'''
+odb12v0_gene_uniprot_only.tab
+odb12v0_OG2genes.tab
+'''
+
+Execute the following commands:
+python ortho_mapping.py
