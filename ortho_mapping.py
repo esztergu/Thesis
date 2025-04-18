@@ -46,7 +46,7 @@ rodent_to_human = rodent_to_human[["chembl_id_rodent", "chembl_id_human"]].drop_
 rodent_to_human.to_csv("ortholog_mapping.csv")
 
 namemapping=pd.read_sql_query("SELECT PREF_NAME, CHEMBL_ID FROM TARGET_DICTIONARY", conn)
-temp=pd.merge(rodent_to_human, namemapping, left_on="chembl_id_rodent", right_on="chembl_id") #Rename x and y
+temp=pd.merge(rodent_to_human, namemapping, left_on="chembl_id_rodent", right_on="chembl_id")
 temp=temp.rename(columns={"pref_name":"pref_name_rodent"})[["chembl_id_rodent", "chembl_id_human", "pref_name_rodent"]]
 rodent_to_human_names=pd.merge(temp, namemapping, left_on="chembl_id_human", right_on="chembl_id").rename(columns={"pref_name":"pref_name_human"})
 rodent_to_human_names.to_csv("ortholog_mapping_with_names.csv")
