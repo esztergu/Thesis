@@ -1,6 +1,6 @@
 # Thesis
 
-Download the propriatery dependencies from here: https://owncloud.esat.kuleuven.be/index.php/s/KfwoJRoJa82Ajt2
+Download the propriatery dependencies
 
 Unzip it into a new folder named dependencies
 
