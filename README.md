@@ -76,12 +76,10 @@ python list_params.py -m human_only/
 # Analyzing results
 
 Edit target_compare.py in line 14 and 25 to the selected optimal models
-Edit similarity_check.py in line 12 to the selected optimal model
 
-Execute the following commands:
+Execute the following command:
 ```
 python target_compare.py
-python similarity_check.py
 ```
 
 # Creating target orthology mapping
